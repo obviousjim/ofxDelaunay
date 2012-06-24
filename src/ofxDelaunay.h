@@ -1,6 +1,5 @@
 /*
  *  ofxDelaunay.h
- *  openFrameworks
  *
  *  Created by Pat Long on 29/10/09.
  *  Copyright 2009 Tangible Interaction. All rights reserved.
@@ -10,51 +9,33 @@
  *
  *	Cleaned up by Lukasz Karluk, 19/05/2010
  *
+ *  Refactored for 0071 + ofMesh by James George on 21/06/2012
  */
 
-#ifndef _OFX_DELAUNAY
-#define _OFX_DELAUNAY
+#pragma once
 
 #include "ofMain.h"
 #include "Delaunay.h"
 
+class ofxDelaunay {
 
-#define DEFAULT_MAX_POINTS 500
-
-
-struct ofxDelaunayTriangle
-{
-	ofPoint		points[ 3 ];
-	int			pointIndex[ 3 ];
-};
-
-class ofxDelaunay
-{
-
-public:
+  public:
+    
+	void reset();
 	
-	 ofxDelaunay();
-	~ofxDelaunay();
+	int addPoint( const ofPoint& point );
+	int addPoint( float x, float y, float z);
+	int addPoints( vector<ofPoint>& points );
 	
-	void setMaxPoints	( int maxPoints = DEFAULT_MAX_POINTS );
-	void reset			();
+	int  triangulate();
+	void draw();
 	
-	int  addPoint		( const ofPoint& point );
-	int  addPoint		( float x, float y, float z );
+    ofMesh triangleMesh;
 	
-	int  triangulate	();
-	void draw			();
-	
-	vector<ofxDelaunayTriangle>		triangles;
-	
-private:
-	
-	int					maxPoints;
-	ITRIANGLE*			v;
-	XYZ*				p;
-	int					nv;
-	int					ntri;
+  private:
+    vector<ITRIANGLE> triangles;
+    vector<XYZ> vertices;
 	
 };
 
-#endif
+
