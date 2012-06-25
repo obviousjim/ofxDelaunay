@@ -1,6 +1,5 @@
 /*
- *  ofxDelaunay.cpp
- *  openFrameworks
+ *  ofxDelaunay.h
  *
  *  Created by Pat Long on 29/10/09.
  *  Copyright 2009 Tangible Interaction. All rights reserved.
@@ -8,11 +7,14 @@
  *  Some parts based on demo code by Gilles Dumoulin. 
  *  Source: http://local.wasp.uwa.edu.au/~pbourke/papers/triangulate/cpp.zip
  *
+ *	Cleaned up by Lukasz Karluk, 19/05/2010
+ *
+ *  Refactored for 0071 + ofMesh by James George on 21/06/2012
  */
+
 #include "ofxDelaunay.h"
 
 void ofxDelaunay::reset(){
-
     vertices.clear();
     triangles.clear();
 	triangleMesh.clear();
@@ -48,7 +50,7 @@ int ofxDelaunay::triangulate(){
     
     //allocate space for triangle indices
     triangles.resize(3*nv);
-
+    
 	int ntri;
 	qsort( &vertices[0], vertices.size()-3, sizeof( XYZ ), XYZCompare );
 	Triangulate( nv, &vertices[0], &triangles[0], ntri );

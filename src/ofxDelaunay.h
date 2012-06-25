@@ -18,8 +18,8 @@
 #include "Delaunay.h"
 
 class ofxDelaunay {
-
-  public:
+    
+public:
     
 	void reset();
 	
@@ -32,7 +32,7 @@ class ofxDelaunay {
 	
     ofMesh triangleMesh;
 	
-  private:
+private:
     vector<ITRIANGLE> triangles;
     vector<XYZ> vertices;
 	
