@@ -42,6 +42,10 @@ int ofxDelaunay::addPoints( vector<ofPoint>& points ){
 
 int ofxDelaunay::triangulate(){
     
+    if(vertices.size() < 3){
+        return;
+    }
+    
     int nv = vertices.size();
     //add 3 emptly slots, required by the Triangulate call
     vertices.push_back(XYZ());
@@ -70,6 +74,10 @@ int ofxDelaunay::triangulate(){
 		triangleMesh.addIndex(triangles[ i ].p3);
 	}
 	
+    //erase the last three triangles
+    vertices.erase(vertices.end()-1);
+    vertices.erase(vertices.end()-1);
+    vertices.erase(vertices.end()-1);
 	return ntri;
 }
 
