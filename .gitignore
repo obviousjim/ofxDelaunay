@@ -41,6 +41,7 @@ apps/*/*/Debug Mac OS X
 apps/*/*/Release Mac OS X
 .DS_Store
 *.perspectivev3
+xcuserdata/
 
 #Linux
 addons/Debug Linux
@@ -51,5 +52,6 @@ apps/*/*/Debug Linux
 apps/*/*/Release Linux
 apps/*/*/Debug Linux64
 apps/*/*/Release Linux64
+
 
 
