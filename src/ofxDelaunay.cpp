@@ -43,7 +43,7 @@ int ofxDelaunay::addPoints( vector<ofPoint>& points ){
 int ofxDelaunay::triangulate(){
     
     if(vertices.size() < 3){
-        return;
+        return NULL;
     }
     
     int nv = vertices.size();
