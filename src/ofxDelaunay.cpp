@@ -25,10 +25,11 @@ int ofxDelaunay::addPoint( const ofPoint& point ){
 }
 
 int ofxDelaunay::addPoint( float x, float y, float z ){
-    XYZ v;
+    XYZI v;
     v.x = x;
     v.y = y;
     v.z = z;
+	v.i = vertices.size();
     vertices.push_back(v);
 	return vertices.size();
 }
@@ -47,37 +48,50 @@ int ofxDelaunay::triangulate(){
     }
     
     int nv = vertices.size();
+	
+	// make clone not to destroy vertices
+	vector<XYZI> verticesTemp = vertices;
+	qsort( &verticesTemp[0], verticesTemp.size(), sizeof( XYZI ), XYZICompare );
+	
+	//vertices required for Triangulate
+    vector<XYZ> verticesXYZ;
+	
+	//copy XYZIs to XYZ
+	for (int i = 0; i < nv; i++) {
+		XYZ v;
+		v.x = verticesTemp.at(i).x;
+		v.y = verticesTemp.at(i).y;
+		v.z = verticesTemp.at(i).z;
+		verticesXYZ.push_back(v);
+	}
+	
     //add 3 emptly slots, required by the Triangulate call
-    vertices.push_back(XYZ());
-    vertices.push_back(XYZ());
-    vertices.push_back(XYZ());
+    verticesXYZ.push_back(XYZ());
+    verticesXYZ.push_back(XYZ());
+    verticesXYZ.push_back(XYZ());
     
     //allocate space for triangle indices
     triangles.resize(3*nv);
     
 	int ntri;
-	qsort( &vertices[0], vertices.size()-3, sizeof( XYZ ), XYZCompare );
-	Triangulate( nv, &vertices[0], &triangles[0], ntri );
+	Triangulate( nv, &verticesXYZ[0], &triangles[0], ntri );
 	
-	// copy triangle data to ofxDelaunayTriangle.
+	//copy triangle data to ofxDelaunayTriangle.
 	triangleMesh.clear();
-    
+	triangleMesh.setMode(OF_PRIMITIVE_TRIANGLES);
+	
     //copy vertices
 	for (int i = 0; i < nv; i++){
         triangleMesh.addVertex(ofVec3f(vertices[i].x,vertices[i].y,vertices[i].z));
     }
-    
-    //copy triagles
+	
+	//copy triangles
 	for(int i = 0; i < ntri; i++){
-		triangleMesh.addIndex(triangles[ i ].p1);
-		triangleMesh.addIndex(triangles[ i ].p2);
-		triangleMesh.addIndex(triangles[ i ].p3);
+		triangleMesh.addIndex(verticesTemp.at(triangles[ i ].p1).i);
+		triangleMesh.addIndex(verticesTemp.at(triangles[ i ].p2).i);
+		triangleMesh.addIndex(verticesTemp.at(triangles[ i ].p3).i);
 	}
 	
-    //erase the last three triangles
-    vertices.erase(vertices.end()-1);
-    vertices.erase(vertices.end()-1);
-    vertices.erase(vertices.end()-1);
 	return ntri;
 }
 
@@ -88,4 +102,17 @@ void ofxDelaunay::draw(){
     else{
     	triangleMesh.drawWireframe();    
     }
+}
+
+int XYZICompare(const void *v1, const void *v2){
+	XYZI *p1, *p2;
+    
+	p1 = (XYZI*)v1;
+	p2 = (XYZI*)v2;
+	if(p1->x < p2->x)
+		return(-1);
+	else if(p1->x > p2->x)
+		return(1);
+	else
+		return(0);
 }
