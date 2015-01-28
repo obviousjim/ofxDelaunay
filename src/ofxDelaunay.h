@@ -26,15 +26,28 @@ public:
 	int addPoint( const ofPoint& point );
 	int addPoint( float x, float y, float z);
 	int addPoints( vector<ofPoint>& points );
-	
+
+	ofPoint getPointNear(ofPoint pos, float minDist, int & index); //returns actual point AND index to point
+	ITRIANGLE getTriangleForPos(ofPoint pos); //returns ITRIANGLE(0,0,0) if none found!
+	void removePointAtIndex(int index); //invalidates triangles and mesh
+	void setPointAtIndex(ofPoint p, int index); //invalidates mesh
+	vector<ofPoint> getPointsForITriangle(ITRIANGLE t);
+	int getNumTriangles();
+	int getNumPoints();
+	ITRIANGLE getTriangleAtIndex(int index);
+
 	int  triangulate();
 	void draw();
 	
-    ofMesh triangleMesh;
-	
+    ofMesh triangleMesh; //output of triangulate();
+
+
 private:
-    vector<ITRIANGLE> triangles;
-    vector<XYZ> vertices;
+
+	    vector<XYZ> vertices; //only input of triangulate();
+		vector<ITRIANGLE> triangles; //output of triangulate();
+		int ntri; //# tri
+
 	
 };
 
