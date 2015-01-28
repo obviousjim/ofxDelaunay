@@ -17,6 +17,13 @@
 #include "ofMain.h"
 #include "Delaunay.h"
 
+struct XYZI{
+	double x, y, z;
+	int i; // index
+};
+
+int XYZICompare(const void *v1, const void *v2);
+
 class ofxDelaunay {
     
 public:
@@ -44,7 +51,7 @@ public:
 
 private:
 
-	    vector<XYZ> vertices; //only input of triangulate();
+	    vector<XYZI> vertices; //only input of triangulate();
 		vector<ITRIANGLE> triangles; //output of triangulate();
 		int ntri; //# tri
 
