@@ -121,7 +121,7 @@ ofPoint ofxDelaunay::getPointNear(ofPoint pos, float minimumDist, int & index){
 	XYZ p; p.x = pos.x; p.y = pos.y; p.z = pos.z;
 	float minDist = FLT_MAX;
 	for(int i = 0; i < vertices.size() ; i++){
-		float d = dist(vertices[i], p);
+		float d = ofDist(vertices[i].x, vertices[i].y, p.x, p.y);
 		if(d < minDist ) {
 			minDist = d;
 			index = i;
