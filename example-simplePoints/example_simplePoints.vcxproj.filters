@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxDelaunay\src\ofxDelaunay.cpp">
+      <Filter>addons\ofxDelaunay\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxDelaunay\libs\Delaunay\Delaunay.cpp">
+      <Filter>addons\ofxDelaunay\libs\Delaunay</Filter>
+    </ClCompile>
+    <ClCompile Include="src\testApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons">
+      <UniqueIdentifier>{71834F65-F3A9-211E-73B8-DC85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxDelaunay">
+      <UniqueIdentifier>{33AEF2BD-546A-734A-577D-708F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxDelaunay\src">
+      <UniqueIdentifier>{52C9C640-A7D0-8CA7-C82E-2759}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxDelaunay\libs">
+      <UniqueIdentifier>{30A85846-14CF-0582-4723-B04D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxDelaunay\libs\Delaunay">
+      <UniqueIdentifier>{D243CA4C-1F20-F2E6-59F6-244B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\addons\ofxDelaunay\src\ofxDelaunay.h">
+      <Filter>addons\ofxDelaunay\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxDelaunay\libs\Delaunay\Delaunay.h">
+      <Filter>addons\ofxDelaunay\libs\Delaunay</Filter>
+    </ClInclude>
+    <ClInclude Include="src\testApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icon.rc" />
+  </ItemGroup>
+</Project>
