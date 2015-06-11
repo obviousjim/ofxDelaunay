@@ -232,20 +232,14 @@ int Triangulate(int nv, XY pxyz[], ITRIANGLE v[], int &ntri)
 
     // Remove triangles with supertriangle vertices
     // These are triangles which have a vertex number greater than nv
-    for(i = 0; i < ntri; i++) {
-        if(v[i].p1 >= nv || v[i].p2 >= nv || v[i].p3 >= nv) {
-            v[i] = v[ntri-1];
-            ntri--;
-            i--;
-        }
+    int offset = 0;
+    for(int i=0; i<ntri; ++i) {
+        if(v[i].p1 >= nv || v[i].p2 >= nv || v[i].p3 >= nv || (! complete[i]))
+            offset++;
+        else
+            v[i - offset] = v[i];
     }
-
-    /*
-    for(i=0; i<ntri; ++i) {
-        if(! complete[i])
-            printf("FOO\n");
-    }
-    */
+    ntri -= offset;
 
     delete[] edges;
     delete[] complete;
