@@ -78,7 +78,7 @@ int ofxDelaunay::triangulate(){
     verticesXY.push_back(XY());
     verticesXY.push_back(XY());
     //allocate space for triangle indices
-    triangles.resize(3*nv);
+    triangles.resize(4*nv); // be sure that Triangulate never uses more triangles than this!
 
 	Triangulate( nv, &verticesXY[0], &triangles[0], ntri );
 
@@ -93,8 +93,8 @@ int ofxDelaunay::triangulate(){
 
 	//copy triangles
 	for(int i = 0; i < ntri; i++) {
-        if(triangles[i].p1 > nv)
-            printf("Tri %d %d | %d %d %d", i, ntri, triangles[ i ].p1, triangles[ i ].p2, triangles[ i ].p3);
+        //if(triangles[i].p1 > nv)
+        //    printf("Tri %d %d | %d %d %d", i, ntri, triangles[ i ].p1, triangles[ i ].p2, triangles[ i ].p3);
         assert(triangles[i].p1 <= nv);
 		triangleMesh.addIndex(verticesTemp.at(triangles[ i ].p1).i);
 		assert(triangles[i].p2 <= nv);
