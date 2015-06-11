@@ -25,13 +25,13 @@ struct IEDGE{
     int p1, p2;
 };
 
-struct XYZ{
-    double x, y, z;
+struct XY{
+    double x, y;
 };
 
-int XYZCompare(const void *v1, const void *v2);
-int Triangulate(int nv, XYZ pxyz[], ITRIANGLE v[], int &ntri);
-int CircumCircle(double, double, double, double, double, double, double, 
+int XYCompare(const void *v1, const void *v2);
+int Triangulate(int nv, XY pxyz[], ITRIANGLE v[], int &ntri);
+int CircumCircle(double, double, double, double, double, double, double,
 double, double&, double&, double&);
 
 #endif

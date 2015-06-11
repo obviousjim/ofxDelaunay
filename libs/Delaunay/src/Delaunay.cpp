@@ -9,7 +9,7 @@
 
 #include "Delaunay.h"
 
-using namespace std; 
+using namespace std;
 
 ////////////////////////////////////////////////////////////////////////
 // CircumCircle() :
@@ -19,7 +19,7 @@ using namespace std;
 //   Note : A point on the edge is inside the circumcircle
 ////////////////////////////////////////////////////////////////////////
 
-int CircumCircle(double xp, double yp, double x1, double y1, double x2, 
+int CircumCircle(double xp, double yp, double x1, double y1, double x2,
 double y2, double x3, double y3, double &xc, double &yc, double &r){
   double m1, m2, mx1, mx2, my1, my2;
   double dx, dy, rsqr, drsqr;
@@ -27,7 +27,7 @@ double y2, double x3, double y3, double &xc, double &yc, double &r){
     // Check for coincident points
     if(abs(y1 - y2) < EPSILON && abs(y2 - y3) < EPSILON)
         return(false);
-    
+
     if(abs(y2-y1) < EPSILON){
         m2 = - (x3 - x2) / (y3 - y2);
         mx2 = (x2 + x3) / 2.0;
@@ -50,7 +50,7 @@ double y2, double x3, double y3, double &xc, double &yc, double &r){
         xc = (m1 * mx1 - m2 * mx2 + my2 - my1) / (m1 - m2);
         yc = m1 * (xc - mx1) + my1;
     }
-    
+
     dx = x2 - xc;
     dy = y2 - yc;
     rsqr = dx * dx + dy * dy;
@@ -58,7 +58,7 @@ double y2, double x3, double y3, double &xc, double &yc, double &r){
     dx = xp - xc;
     dy = yp - yc;
     drsqr = dx * dx + dy * dy;
-    
+
     return((drsqr <= rsqr) ? true : false);
 }
 
@@ -75,27 +75,28 @@ double y2, double x3, double y3, double &xc, double &yc, double &r){
 //   qsort(p,nv,sizeof(XYZ),XYZCompare);
 ///////////////////////////////////////////////////////////////////////////////
 
-int Triangulate(int nv, XYZ pxyz[], ITRIANGLE v[], int &ntri)
+int Triangulate(int nv, XY pxyz[], ITRIANGLE v[], int &ntri)
 {
     int *complete = NULL;
     IEDGE *edges = NULL;
     IEDGE *p_EdgeTemp;
     int nedge = 0;
     int trimax, emax = 200;
-    int status = 0;
-    
+    // int status = 0;
+
     int inside;
     int i, j, k;
-    double xp, yp, x1, y1, x2, y2, x3, y3, xc, yc, r;
+    double xp, yp, x1, y1, x2, y2, x3, y3;
+    double xc = 0; double yc = 0; double r = 0;
     double xmin, xmax, ymin, ymax, xmid, ymid;
     double dx, dy, dmax;
-    
+
     // Allocate memory for the completeness list, flag for each triangle
     trimax = 4 * nv;
     complete = new int[trimax];
     // Allocate memory for the edge list
     edges = new IEDGE[emax];
-    
+
     // Find the maximum and minimum vertex bounds.
     // This is to allow calculation of the bounding triangle
     xmin = pxyz[0].x;
@@ -113,7 +114,7 @@ int Triangulate(int nv, XYZ pxyz[], ITRIANGLE v[], int &ntri)
     dmax = (dx > dy) ? dx : dy;
     xmid = (xmax + xmin) / 2.0;
     ymid = (ymax + ymin) / 2.0;
-    
+
    // Set up the supertriangle
    // This is a triangle which encompasses all the sample points.
    // The supertriangle coordinates are added to the end of the
@@ -121,26 +122,23 @@ int Triangulate(int nv, XYZ pxyz[], ITRIANGLE v[], int &ntri)
    // the triangle list.
     pxyz[nv+0].x = xmid - 20 * dmax;
     pxyz[nv+0].y = ymid - dmax;
-    pxyz[nv+0].z = 0.0;
     pxyz[nv+1].x = xmid;
     pxyz[nv+1].y = ymid + 20 * dmax;
-    pxyz[nv+1].z = 0.0;
     pxyz[nv+2].x = xmid + 20 * dmax;
     pxyz[nv+2].y = ymid - dmax;
-    pxyz[nv+0].z = 0.0;
     v[0].p1 = nv;
     v[0].p2 = nv+1;
     v[0].p3 = nv+2;
     complete[0] = false;
     ntri = 1;
-    
-    
+
+
     // Include each point one at a time into the existing mesh
     for(i = 0; i < nv; i++){
         xp = pxyz[i].x;
         yp = pxyz[i].y;
         nedge = 0;
-        
+
         // Set up the edge buffer.
         // If the point (xp,yp) lies inside the circumcircle then the
         // three edges of that triangle are added to the edge buffer
@@ -156,12 +154,12 @@ int Triangulate(int nv, XYZ pxyz[], ITRIANGLE v[], int &ntri)
             y3 = pxyz[v[j].p3].y;
             inside = CircumCircle(xp, yp, x1, y1, x2, y2, x3, y3, xc, yc, r);
             //    if (xc + r < xp)
-            
+
             // Suggested
             // if (xc + r + EPSILON < xp)
             if (xc < xp && ((xp-xc)*(xp-xc)) > r)
                 complete[j] = true;
-            
+
             if(inside){
                 // Check that we haven't exceeded the edge list size
                 if(nedge + 3 >= emax){
@@ -173,7 +171,7 @@ int Triangulate(int nv, XYZ pxyz[], ITRIANGLE v[], int &ntri)
                     delete []edges;
                     edges = p_EdgeTemp;
                 }
-                
+
                 edges[nedge+0].p1 = v[j].p1;
                 edges[nedge+0].p2 = v[j].p2;
                 edges[nedge+1].p1 = v[j].p2;
@@ -187,7 +185,7 @@ int Triangulate(int nv, XYZ pxyz[], ITRIANGLE v[], int &ntri)
                 j--;
             }
         }
-        
+
         // Tag multiple edges
         // Note: if all triangles are specified anticlockwise then all
         // interior edges are opposite pointing in direction.
@@ -219,19 +217,19 @@ int Triangulate(int nv, XYZ pxyz[], ITRIANGLE v[], int &ntri)
             if (ntri >= trimax) {
                 break;
             }
-            
+
             v[ntri].p1 = edges[j].p1;
             v[ntri].p2 = edges[j].p2;
             v[ntri].p3 = i;
             complete[ntri] = false;
             ntri++;
         }
-        
+
         if (ntri >= trimax) {
             break;
         }
     }
-    
+
     // Remove triangles with supertriangle vertices
     // These are triangles which have a vertex number greater than nv
     for(i = 0; i < ntri; i++) {
@@ -241,21 +239,28 @@ int Triangulate(int nv, XYZ pxyz[], ITRIANGLE v[], int &ntri)
             i--;
         }
     }
-    
+
+    /*
+    for(i=0; i<ntri; ++i) {
+        if(! complete[i])
+            printf("FOO\n");
+    }
+    */
+
     delete[] edges;
     delete[] complete;
     return 0;
 }
 
 int XYZCompare(const void *v1, const void *v2){
-  XYZ *p1, *p2;
-    
-  p1 = (XYZ*)v1;
-  p2 = (XYZ*)v2;
-  if(p1->x < p2->x)
-    return(-1);
-  else if(p1->x > p2->x)
-         return(1);
-       else
-         return(0);
+    XY *p1, *p2;
+
+    p1 = (XY*)v1;
+    p2 = (XY*)v2;
+    if(p1->x < p2->x)
+        return(-1);
+    else if(p1->x > p2->x)
+        return(1);
+    else
+        return(0);
 }
