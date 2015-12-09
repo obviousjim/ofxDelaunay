@@ -60,8 +60,8 @@ int ofxDelaunay::triangulate(){
     int nv = vertices.size();
 	
 	// make clone not to destroy vertices
-	vector<XYZI> verticesTemp = vertices;
-	qsort( &verticesTemp[0], verticesTemp.size(), sizeof( XYZI ), XYZICompare );
+	sortedVertices = vertices;
+	qsort( sortedVertices.data(), sortedVertices.size(), sizeof( XYZI ), XYZICompare );
 	
 	//vertices required for Triangulate
     vector<XYZ> verticesXYZ;
@@ -69,9 +69,9 @@ int ofxDelaunay::triangulate(){
 	//copy XYZIs to XYZ
 	for (int i = 0; i < nv; i++) {
 		XYZ v;
-		v.x = verticesTemp.at(i).x;
-		v.y = verticesTemp.at(i).y;
-		v.z = verticesTemp.at(i).z;
+		v.x = sortedVertices.at(i).x;
+		v.y = sortedVertices.at(i).y;
+		v.z = sortedVertices.at(i).z;
 		verticesXYZ.push_back(v);
 	}
 	
@@ -96,9 +96,9 @@ int ofxDelaunay::triangulate(){
 	
 	//copy triangles
 	for(int i = 0; i < ntri; i++){
-		triangleMesh.addIndex(verticesTemp.at(triangles[ i ].p1).i);
-		triangleMesh.addIndex(verticesTemp.at(triangles[ i ].p2).i);
-		triangleMesh.addIndex(verticesTemp.at(triangles[ i ].p3).i);
+		triangleMesh.addIndex(sortedVertices.at(triangles[ i ].p1).i);
+		triangleMesh.addIndex(sortedVertices.at(triangles[ i ].p2).i);
+		triangleMesh.addIndex(sortedVertices.at(triangles[ i ].p3).i);
 	}
 	
 	return ntri;
@@ -173,9 +173,9 @@ void ofxDelaunay::setPointAtIndex(ofPoint p, int index){
 
 vector<ofPoint> ofxDelaunay::getPointsForITriangle(ITRIANGLE t){
 	vector<ofPoint> pts;
-	pts.push_back( ofPoint(vertices[t.p1].x, vertices[t.p1].y, vertices[t.p1].z));
-	pts.push_back( ofPoint(vertices[t.p2].x, vertices[t.p2].y, vertices[t.p2].z));
-	pts.push_back( ofPoint(vertices[t.p3].x, vertices[t.p3].y, vertices[t.p3].z));
+	pts.push_back( ofPoint(sortedVertices[t.p1].x, sortedVertices[t.p1].y, sortedVertices[t.p1].z));
+	pts.push_back( ofPoint(sortedVertices[t.p2].x, sortedVertices[t.p2].y, sortedVertices[t.p2].z));
+	pts.push_back( ofPoint(sortedVertices[t.p3].x, sortedVertices[t.p3].y, sortedVertices[t.p3].z));
 	return pts;
 }
 

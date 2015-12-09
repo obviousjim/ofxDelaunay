@@ -51,9 +51,10 @@ public:
 
 private:
 
-	    vector<XYZI> vertices; //only input of triangulate();
-		vector<ITRIANGLE> triangles; //output of triangulate();
-		int ntri; //# tri
+	vector<XYZI> vertices; //once sorted, these are used in triangulate();
+	vector<XYZI> sortedVertices; //only input of triangulate();
+	vector<ITRIANGLE> triangles; //output of triangulate();
+	int ntri; //# tri
 
 	
 };
