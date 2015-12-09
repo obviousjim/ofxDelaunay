@@ -182,11 +182,14 @@ vector<ofPoint> ofxDelaunay::getPointsForITriangle(ITRIANGLE t){
 ITRIANGLE ofxDelaunay::getTriangleForPos(ofPoint pos){
 	
 	ITRIANGLE ti;
+	ti.p1 = 0;
+	ti.p2 = 0;
+	ti.p3 = 0;
 
 	for(int i = 0; i < ntri ; i++){
-        XYZ p0; p0.x = vertices[triangles[i].p1].x; p0.y = vertices[triangles[i].p1].y; p0.z = vertices[triangles[i].p1].z;
-        XYZ p1; p1.x = vertices[triangles[i].p2].x; p1.y = vertices[triangles[i].p2].y; p1.z = vertices[triangles[i].p2].z;
-        XYZ p2; p2.x = vertices[triangles[i].p3].x; p2.y = vertices[triangles[i].p3].y; p2.z = vertices[triangles[i].p3].z;
+        XYZ p0; p0.x = sortedVertices[triangles[i].p1].x; p0.y = sortedVertices[triangles[i].p1].y; p0.z = sortedVertices[triangles[i].p1].z;
+        XYZ p1; p1.x = sortedVertices[triangles[i].p2].x; p1.y = sortedVertices[triangles[i].p2].y; p1.z = sortedVertices[triangles[i].p2].z;
+        XYZ p2; p2.x = sortedVertices[triangles[i].p3].x; p2.y = sortedVertices[triangles[i].p3].y; p2.z = sortedVertices[triangles[i].p3].z;
 		bool inside = ptInTriangle(pos, p0, p1, p2);
 		if(inside) {
 			ti = triangles[i];
