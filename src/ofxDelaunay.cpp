@@ -59,9 +59,8 @@ int ofxDelaunay::triangulate(){
     
     int nv = vertices.size();
 	
-	// make clone not to destroy vertices
-	sortedVertices = vertices;
-	qsort( sortedVertices.data(), sortedVertices.size(), sizeof( XYZI ), XYZICompare );
+	//Sort the vertices for the Triangulate call.
+	qsort( vertices.data(), vertices.size(), sizeof( XYZI ), XYZICompare );
 	
 	//vertices required for Triangulate
     vector<XYZ> verticesXYZ;
@@ -69,9 +68,9 @@ int ofxDelaunay::triangulate(){
 	//copy XYZIs to XYZ
 	for (int i = 0; i < nv; i++) {
 		XYZ v;
-		v.x = sortedVertices.at(i).x;
-		v.y = sortedVertices.at(i).y;
-		v.z = sortedVertices.at(i).z;
+		v.x = vertices.at(i).x;
+		v.y = vertices.at(i).y;
+		v.z = vertices.at(i).z;
 		verticesXYZ.push_back(v);
 	}
 	
@@ -91,14 +90,14 @@ int ofxDelaunay::triangulate(){
 	
     //copy vertices
 	for (int i = 0; i < nv; i++){
-        triangleMesh.addVertex(ofVec3f(vertices[i].x,vertices[i].y,vertices[i].z));
+		triangleMesh.addVertex(ofVec3f(vertices[i].x, vertices[i].y, vertices[i].z));
     }
 	
 	//copy triangles
 	for(int i = 0; i < ntri; i++){
-		triangleMesh.addIndex(sortedVertices.at(triangles[ i ].p1).i);
-		triangleMesh.addIndex(sortedVertices.at(triangles[ i ].p2).i);
-		triangleMesh.addIndex(sortedVertices.at(triangles[ i ].p3).i);
+		triangleMesh.addIndex(triangles[i].p1);
+		triangleMesh.addIndex(triangles[i].p2);
+		triangleMesh.addIndex(triangles[i].p3);
 	}
 	
 	return ntri;
@@ -137,7 +136,7 @@ ofPoint ofxDelaunay::getPointNear(ofPoint pos, float minimumDist, int & index){
 		float d = ofDist(vertices[i].x, vertices[i].y, p.x, p.y);
 		if(d < minDist ) {
 			minDist = d;
-			index = i;
+			index = vertices[i].i;
 			ret = vertices[i];
 		}
 	}
@@ -156,26 +155,46 @@ ITRIANGLE ofxDelaunay::getTriangleAtIndex(int index){
 }
 
 void ofxDelaunay::removePointAtIndex(int index){
-	if (index >= 0 && index < vertices.size()){
-		vertices.erase(vertices.begin()+index);
+
+	int toErase = -1;
+
+	for (int i = 0; i < vertices.size(); i++) {
+		if (vertices[i].i == index) {
+			toErase = i;
+		}
+
+		//Decrement the stored indices to maintain order.
+		//If this is not done, when new points are added, their indices, which are 
+		//based one the number of stored vertices, can be equal to an existing index.
+		if (vertices[i].i > index) {
+			vertices[i].i--;
+		}
 	}
-	triangulate();
+
+	if (toErase != -1) {
+		vertices.erase(vertices.begin() + toErase);
+		triangulate();
+	}
 }
 
 
 void ofxDelaunay::setPointAtIndex(ofPoint p, int index){
-	if (index >= 0 && index < vertices.size()){
-        XYZI pp; pp.x = p.x; pp.y = p.y; pp.z = p.z; pp.i = index;
-		vertices[index] = pp;
+    XYZI pp; pp.x = p.x; pp.y = p.y; pp.z = p.z; pp.i = index;
+
+	for (int i = 0; i < vertices.size(); i++) {
+		if (vertices[i].i == index) {
+			vertices[i] = pp;
+			triangulate();
+			break;
+		}
 	}
-	triangulate();
 }
 
 vector<ofPoint> ofxDelaunay::getPointsForITriangle(ITRIANGLE t){
 	vector<ofPoint> pts;
-	pts.push_back( ofPoint(sortedVertices[t.p1].x, sortedVertices[t.p1].y, sortedVertices[t.p1].z));
-	pts.push_back( ofPoint(sortedVertices[t.p2].x, sortedVertices[t.p2].y, sortedVertices[t.p2].z));
-	pts.push_back( ofPoint(sortedVertices[t.p3].x, sortedVertices[t.p3].y, sortedVertices[t.p3].z));
+	pts.push_back( ofPoint(vertices[t.p1].x, vertices[t.p1].y, vertices[t.p1].z));
+	pts.push_back( ofPoint(vertices[t.p2].x, vertices[t.p2].y, vertices[t.p2].z));
+	pts.push_back( ofPoint(vertices[t.p3].x, vertices[t.p3].y, vertices[t.p3].z));
 	return pts;
 }
 
@@ -187,9 +206,9 @@ ITRIANGLE ofxDelaunay::getTriangleForPos(ofPoint pos){
 	ti.p3 = 0;
 
 	for(int i = 0; i < ntri ; i++){
-        XYZ p0; p0.x = sortedVertices[triangles[i].p1].x; p0.y = sortedVertices[triangles[i].p1].y; p0.z = sortedVertices[triangles[i].p1].z;
-        XYZ p1; p1.x = sortedVertices[triangles[i].p2].x; p1.y = sortedVertices[triangles[i].p2].y; p1.z = sortedVertices[triangles[i].p2].z;
-        XYZ p2; p2.x = sortedVertices[triangles[i].p3].x; p2.y = sortedVertices[triangles[i].p3].y; p2.z = sortedVertices[triangles[i].p3].z;
+        XYZ p0; p0.x = vertices[triangles[i].p1].x; p0.y = vertices[triangles[i].p1].y; p0.z = vertices[triangles[i].p1].z;
+        XYZ p1; p1.x = vertices[triangles[i].p2].x; p1.y = vertices[triangles[i].p2].y; p1.z = vertices[triangles[i].p2].z;
+        XYZ p2; p2.x = vertices[triangles[i].p3].x; p2.y = vertices[triangles[i].p3].y; p2.z = vertices[triangles[i].p3].z;
 		bool inside = ptInTriangle(pos, p0, p1, p2);
 		if(inside) {
 			ti = triangles[i];
