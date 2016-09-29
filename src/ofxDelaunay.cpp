@@ -14,7 +14,7 @@
 
 #include "ofxDelaunay.h"
 
-bool ptInTriangle(const ofVec2f & p, const XYZ & p0, const XYZ & p1, const XYZ& p2) {
+bool ptInTriangle(const glm::vec3 & p, const XYZ & p0, const XYZ & p1, const XYZ& p2) {
     float A = 0.5f * (-p1.y * p2.x + p0.y * (-p1.x + p2.x) + p0.x * (p1.y - p2.y) + p1.x * p2.y);
     float sign = A < 0.0f ? -1.0f : 1.0f;
     float s = (p0.y * p2.x - p0.x * p2.y + (p2.y - p0.y) * p.x + (p0.x - p2.x) * p.y) * sign;
@@ -30,7 +30,7 @@ void ofxDelaunay::reset(){
 	ntri = 0;
 }
 
-int ofxDelaunay::addPoint( const ofPoint& point ){
+int ofxDelaunay::addPoint( const glm::vec3& point ){
 	return addPoint( point.x, point.y, point.z );
 }
 
@@ -44,7 +44,7 @@ int ofxDelaunay::addPoint( float x, float y, float z ){
 	return vertices.size();
 }
 
-int ofxDelaunay::addPoints( vector<ofPoint>& points ){
+int ofxDelaunay::addPoints( vector<glm::vec3>& points ){
 	for(int i = 0; i < points.size(); i++){
         addPoint( points[i] );
     }
@@ -91,7 +91,7 @@ int ofxDelaunay::triangulate(){
 	
     //copy vertices
 	for (int i = 0; i < nv; i++){
-        triangleMesh.addVertex(ofVec3f(vertices[i].x,vertices[i].y,vertices[i].z));
+        triangleMesh.addVertex(glm::vec3(vertices[i].x,vertices[i].y,vertices[i].z));
     }
 	
 	//copy triangles
@@ -128,7 +128,7 @@ int ofxDelaunay::getNumPoints(){
 	return vertices.size();
 }
 
-ofPoint ofxDelaunay::getPointNear(ofPoint pos, float minimumDist, int & index){
+glm::vec3 ofxDelaunay::getPointNear(glm::vec3 pos, float minimumDist, int & index){
 
 	XYZI ret;
 	XYZ p; p.x = pos.x; p.y = pos.y; p.z = pos.z;
@@ -145,7 +145,7 @@ ofPoint ofxDelaunay::getPointNear(ofPoint pos, float minimumDist, int & index){
 		ret.x = ret.y = ret.z = 0.0f;
 		index = -1;
 	}
-	return ofVec3f(ret.x, ret.y, ret.z);
+	return glm::vec3(ret.x, ret.y, ret.z);
 }
 
 ITRIANGLE ofxDelaunay::getTriangleAtIndex(int index){
@@ -163,7 +163,7 @@ void ofxDelaunay::removePointAtIndex(int index){
 }
 
 
-void ofxDelaunay::setPointAtIndex(ofPoint p, int index){
+void ofxDelaunay::setPointAtIndex(glm::vec3 p, int index){
 	if (index >= 0 && index < vertices.size()){
         XYZI pp; pp.x = p.x; pp.y = p.y; pp.z = p.z; pp.i = index;
 		vertices[index] = pp;
@@ -171,15 +171,15 @@ void ofxDelaunay::setPointAtIndex(ofPoint p, int index){
 	triangulate();
 }
 
-vector<ofPoint> ofxDelaunay::getPointsForITriangle(ITRIANGLE t){
-	vector<ofPoint> pts;
-	pts.push_back( ofPoint(vertices[t.p1].x, vertices[t.p1].y, vertices[t.p1].z));
-	pts.push_back( ofPoint(vertices[t.p2].x, vertices[t.p2].y, vertices[t.p2].z));
-	pts.push_back( ofPoint(vertices[t.p3].x, vertices[t.p3].y, vertices[t.p3].z));
+vector<glm::vec3> ofxDelaunay::getPointsForITriangle(ITRIANGLE t){
+	vector<glm::vec3> pts;
+	pts.push_back( glm::vec3(vertices[t.p1].x, vertices[t.p1].y, vertices[t.p1].z));
+	pts.push_back( glm::vec3(vertices[t.p2].x, vertices[t.p2].y, vertices[t.p2].z));
+	pts.push_back( glm::vec3(vertices[t.p3].x, vertices[t.p3].y, vertices[t.p3].z));
 	return pts;
 }
 
-ITRIANGLE ofxDelaunay::getTriangleForPos(ofPoint pos){
+ITRIANGLE ofxDelaunay::getTriangleForPos(glm::vec3 pos){
 	
 	ITRIANGLE ti;
 

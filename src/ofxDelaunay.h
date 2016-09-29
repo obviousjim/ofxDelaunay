@@ -30,15 +30,15 @@ public:
     
 	void reset();
 	
-	int addPoint( const ofPoint& point );
+	int addPoint( const glm::vec3& point );
 	int addPoint( float x, float y, float z);
-	int addPoints( vector<ofPoint>& points );
+	int addPoints( vector<glm::vec3>& points );
 
-	ofPoint getPointNear(ofPoint pos, float minDist, int & index); //returns actual point AND index to point
-	ITRIANGLE getTriangleForPos(ofPoint pos); //returns ITRIANGLE(0,0,0) if none found!
+	glm::vec3 getPointNear(glm::vec3 pos, float minDist, int & index); //returns actual point AND index to point
+	ITRIANGLE getTriangleForPos(glm::vec3 pos); //returns ITRIANGLE(0,0,0) if none found!
 	void removePointAtIndex(int index); //invalidates triangles and mesh
-	void setPointAtIndex(ofPoint p, int index); //invalidates mesh
-	vector<ofPoint> getPointsForITriangle(ITRIANGLE t);
+	void setPointAtIndex(glm::vec3 p, int index); //invalidates mesh
+	vector<glm::vec3> getPointsForITriangle(ITRIANGLE t);
 	int getNumTriangles();
 	int getNumPoints();
 	ITRIANGLE getTriangleAtIndex(int index);
