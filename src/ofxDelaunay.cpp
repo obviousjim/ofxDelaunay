@@ -34,18 +34,18 @@ int ofxDelaunay::addPoint( float x, float y, float z ){
     return vertices.size();
 }
 
-int ofxDelaunay::addPoint( const glm::vec3& point ){
+int ofxDelaunay::addPoint( const ofDefaultVec3& point ){
 	return addPoint( point.x, point.y, point.z );
 }
 
-int ofxDelaunay::addPoints( vector<glm::vec3>& points ){
+int ofxDelaunay::addPoints( vector<ofDefaultVec3>& points ){
 	for(int i = 0; i < points.size(); i++){
         addPoint( points[i] );
     }
     return vertices.size();
 }
 
-void ofxDelaunay::setPointAtIndex(glm::vec3 p, int index){
+void ofxDelaunay::setPointAtIndex(ofDefaultVec3 p, int index){
     if (index >= 0 && index < vertices.size()){
         XYZI pp; pp.x = p.x; pp.y = p.y; pp.z = p.z; pp.i = index;
         vertices[index] = pp;
@@ -61,7 +61,7 @@ void ofxDelaunay::removePointAtIndex(int index){
 }
 
 // ------------------------------------------------------------------------------------------------------
-ofPoint ofxDelaunay::getPointNear(glm::vec3 pos, float minimumDist, int & index){
+ofDefaultVec3 ofxDelaunay::getPointNear(ofDefaultVec3 pos, float minimumDist, int & index){
     XYZI ret;
     XYZ p; p.x = pos.x; p.y = pos.y; p.z = pos.z;
     float minDist = FLT_MAX;
@@ -77,7 +77,7 @@ ofPoint ofxDelaunay::getPointNear(glm::vec3 pos, float minimumDist, int & index)
         ret.x = ret.y = ret.z = 0.0f;
         index = -1;
     }
-    return ofVec3f(ret.x, ret.y, ret.z);
+    return ofDefaultVec3(ret.x, ret.y, ret.z);
 }
 
 ITRIANGLE ofxDelaunay::getTriangleAtIndex(int index){
@@ -88,11 +88,11 @@ ITRIANGLE ofxDelaunay::getTriangleAtIndex(int index){
 }
 
 
-vector<glm::vec3> ofxDelaunay::getPointsForITriangle(ITRIANGLE triangle){
-    vector<glm::vec3> pts;
-    pts.push_back( glm::vec3(vertices[triangle.p1].x, vertices[triangle.p1].y, vertices[triangle.p1].z));
-    pts.push_back( glm::vec3(vertices[triangle.p2].x, vertices[triangle.p2].y, vertices[triangle.p2].z));
-    pts.push_back( glm::vec3(vertices[triangle.p3].x, vertices[triangle.p3].y, vertices[triangle.p3].z));
+vector<ofDefaultVec3> ofxDelaunay::getPointsForITriangle(ITRIANGLE triangle){
+    vector<ofDefaultVec3> pts;
+    pts.push_back( ofDefaultVec3(vertices[triangle.p1].x, vertices[triangle.p1].y, vertices[triangle.p1].z));
+    pts.push_back( ofDefaultVec3(vertices[triangle.p2].x, vertices[triangle.p2].y, vertices[triangle.p2].z));
+    pts.push_back( ofDefaultVec3(vertices[triangle.p3].x, vertices[triangle.p3].y, vertices[triangle.p3].z));
     return pts;
 }
 
@@ -105,7 +105,7 @@ int ofxDelaunay::getNumPoints(){
 }
 
 // ------------------------------------------------------------------------------------------------------
-bool ofxDelaunay::pointIsInsideTriangle(const glm::vec3 & p, const XYZ & p0, const XYZ & p1, const XYZ& p2) {
+bool ofxDelaunay::pointIsInsideTriangle(const ofDefaultVec3 & p, const XYZ & p0, const XYZ & p1, const XYZ& p2) {
     float A = 0.5f * (-p1.y * p2.x + p0.y * (-p1.x + p2.x) + p0.x * (p1.y - p2.y) + p1.x * p2.y);
     float sign = A < 0.0f ? -1.0f : 1.0f;
     float s = (p0.y * p2.x - p0.x * p2.y + (p2.y - p0.y) * p.x + (p0.x - p2.x) * p.y) * sign;
@@ -127,7 +127,7 @@ int ofxDelaunay::XYZICompare(const void *v1, const void *v2){
 }
 
 // ------------------------------------------------------------------------------------------------------
-ITRIANGLE ofxDelaunay::getTriangleForPos(glm::vec3 pos){
+ITRIANGLE ofxDelaunay::getTriangleForPos(ofDefaultVec3 pos){
 	
 	ITRIANGLE triangle;
 
@@ -185,7 +185,7 @@ int ofxDelaunay::triangulate(){
     
     //copy vertices
     for (int i = 0; i < nv; i++){
-        triangleMesh.addVertex(ofVec3f(vertices[i].x,vertices[i].y,vertices[i].z));
+        triangleMesh.addVertex(ofDefaultVec3(vertices[i].x,vertices[i].y,vertices[i].z));
     }
     
     //copy triangles

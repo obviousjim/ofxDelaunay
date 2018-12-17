@@ -11,7 +11,7 @@
  *
  *  Refactored for 0071 + ofMesh by James George on 21/06/2012
  *
- *  Ported to GLM by Rafael Redondo 17/12/2018
+ *  Ported to GLM (legacy support) by Rafael Redondo 17/12/2018
  */
 
 #pragma once
@@ -34,26 +34,26 @@ public:
 	void reset();
 	
     /// \brief add points for triangulation
-    int addPoint( const glm::vec3& point );
-	int addPoint( float x, float y, float z);
-	int addPoints( vector<glm::vec3>& points );
+    int addPoint( const ofDefaultVec3& point );
+    int addPoint( float x, float y, float z);
+	int addPoints( vector<ofDefaultVec3>& points );
     
     /// \brief setPointAtIndex invalidates mesh
-    void setPointAtIndex(glm::vec3 p, int index);
+    void setPointAtIndex(ofDefaultVec3 p, int index);
 
     /// \brief removePointAtIndex invalidates triangles and mesh
     void removePointAtIndex(int index);
 
     /// \return actual point AND index to point
-    ofPoint getPointNear(glm::vec3 pos, float minDist, int & index);
+    ofDefaultVec3 getPointNear(ofDefaultVec3 pos, float minDist, int & index);
     
     /// \return returns ITRIANGLE(0,0,0) if none found!
-    ITRIANGLE getTriangleForPos(glm::vec3 pos);
+    ITRIANGLE getTriangleForPos(ofDefaultVec3 pos);
 
     /// \brief getPointsForITriangle retrieves vertices for a triangle
     /// \param t stands for the triangle
     /// \return vertices in vector format
-    vector<glm::vec3> getPointsForITriangle(ITRIANGLE triangle);
+    vector<ofDefaultVec3> getPointsForITriangle(ITRIANGLE triangle);
     
     /// \brief getNumTriangles gets the total number of triangles
     /// \return number of triangles
@@ -84,7 +84,7 @@ private:
     int nTriangles;                                 //< Number of triangles
     
     /// \brief Auxiliary method to check if a point is inside a triangle
-    bool pointIsInsideTriangle(const glm::vec3 & p, const XYZ & p0, const XYZ & p1, const XYZ& p2);
+    bool pointIsInsideTriangle(const ofDefaultVec3 & p, const XYZ & p0, const XYZ & p1, const XYZ& p2);
     
     /// \brief Compare two vertices
     static int XYZICompare(const void *v1, const void *v2);
