@@ -4,7 +4,7 @@
 void ofApp::setup(){
     ofEnableSmoothing();
     ofBackground(0);
-    
+    triangulation.doDrawDebug = true;
 }
 
 //--------------------------------------------------------------
@@ -16,7 +16,12 @@ void ofApp::update(){
 void ofApp::draw(){
     ofNoFill();
     triangulation.draw();
-    ofDrawBitmapString("'r' to reset", ofPoint(10,20));
+    stringstream info;
+    info << "CLICK MOUSE TO ADD POINTS" << endl;
+    info << "PRESS r TO RESET" << endl;
+
+    
+    ofDrawBitmapString(info.str(), ofPoint(10,20));
 }
 
 //--------------------------------------------------------------

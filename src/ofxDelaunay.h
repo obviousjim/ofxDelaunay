@@ -47,7 +47,7 @@ public:
 	void draw();
 	
     ofMesh triangleMesh; //output of triangulate();
-
+    bool doDrawDebug = false;
 
 private:
 
