@@ -111,11 +111,16 @@ void ofxDelaunay::draw(){
     else{
     	triangleMesh.drawWireframe();
     }
-
-//	for(int i = 0; i < vertices.size(); i++ ){
-//		ofDrawBitmapStringHighlight(ofToString(i) , vertices[i].x, vertices[i].y);
-//	}
-	ofDrawBitmapStringHighlight("tri: " + ofToString(ntri) + "\nver:" + ofToString(vertices.size()), 30, 300);
+    if (doDrawDebug)
+    {
+        for(int i = 0; i < vertices.size(); i++ ){
+            ofDrawBitmapStringHighlight(ofToString(i) , vertices[i].x, vertices[i].y);
+        }
+        
+        ofDrawBitmapStringHighlight("tri: " + ofToString(ntri) + "\nver:" + ofToString(vertices.size()), 30, 300);
+    }
+	
+	
 }
 
 
